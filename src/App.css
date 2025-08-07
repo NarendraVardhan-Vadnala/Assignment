@@ -2,10 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -35,4 +31,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.App-button {
+  background-color: #61dafb;
+  border: none;
+  color: white;
+  padding: 100px 20px;
+  text-align: center;
 }
