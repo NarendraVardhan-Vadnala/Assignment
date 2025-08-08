@@ -40,29 +40,35 @@ function Products() {
   }, [productsData]);
 
   // function to fetch the search api.....................
-  function searchOnApi(event) {
-    const value = event.target.value;
-    setsearchData(value);
-
+  useEffect(() => {
     if (searchdata.trim() === "") {
       setSearchResults([]);
       return;
     }
-    console.log("searching on the api....please wait");
-    fetch(`https://dummyjson.com/products/search?q=${value}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const requiredData = data.products.map((p) => ({
-          id: p.id,
-          title: p.title,
-          description: p.description,
-        }));
-        setSearchResults(requiredData);
-      })
-      .catch((error) => {
-        console.error("Search Error:", error);
-      });
-  }
+
+    const timeout = setTimeout(() => {
+      console.log(" time out calling api:", searchdata);
+
+      fetch(`https://dummyjson.com/products/search?q=${searchdata}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const requiredData = data.products.map((p) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description,
+          }));
+          setSearchResults(requiredData);
+        })
+        .catch((error) => {
+          console.error("Search Error:", error);
+        });
+    }, 5000);
+
+    return () => {
+      console.log("u have to wait ....");
+      clearTimeout(timeout);
+    };
+  }, [searchdata]);
 
   return (
     <div>
@@ -71,7 +77,9 @@ function Products() {
           type="text"
           value={searchdata}
           placeholder="search here..."
-          onChange={searchOnApi}
+          onChange={(e) => {
+            setsearchData(e.target.value);
+          }}
         />
       </div>
       <h2>Product List</h2>
