@@ -8,7 +8,14 @@ function TabProvider({ children }) {
 
   return (
     <TabContext.Provider
-      value={{ tab, setTab, productsData, setProductsData,productsFetched, setProductsFetched }}
+      value={{
+        tab,
+        setTab,
+        productsData,
+        setProductsData,
+        productsFetched,
+        setProductsFetched,
+      }}
     >
       {children}
     </TabContext.Provider>

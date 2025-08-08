@@ -8,7 +8,7 @@ import Home from "./Components/Home";
 import TabContext from "./Components/TabContext";
 function App() {
   // const [tab, setTab] = useState("Home");
-  const { tab } = useContext(TabContext);
+  const { tab, setTab } = useContext(TabContext);
   const switchTab = () => {
     switch (tab) {
       case "todo":
@@ -18,7 +18,7 @@ function App() {
           </>
         );
       case "products":
-        return <Products />;
+        return <Products setTab={setTab} />;
       default:
         return <Home />;
     }

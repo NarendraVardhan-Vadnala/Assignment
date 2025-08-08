@@ -1,9 +1,10 @@
 import { React, useEffect, useContext, useState, useRef } from "react";
-import TabProvider from "./TabProvider";
 import TabContext from "./TabContext";
 
 function Products() {
-  const [apidata, setApidata] = useState([]);
+  const [apidata, setApidata] = useState([]); // redundant  not needed
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchdata, setsearchData] = useState("");
   const {
     tab,
     productsData = [],
@@ -25,7 +26,7 @@ function Products() {
             title: p.title,
             description: p.description,
           }));
-          setApidata(requiredData);
+          setApidata(requiredData); // redundant
           setProductsData(requiredData);
           setProductsFetched(true);
         })
@@ -38,18 +39,53 @@ function Products() {
     console.log("this gets printed", productsData);
   }, [productsData]);
 
+  // function to fetch the search api.....................
+  function searchOnApi(event) {
+    const value = event.target.value;
+    setsearchData(value);
+
+    if (searchdata.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+    console.log("searching on the api....please wait");
+    fetch(`https://dummyjson.com/products/search?q=${value}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const requiredData = data.products.map((p) => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+        }));
+        setSearchResults(requiredData);
+      })
+      .catch((error) => {
+        console.error("Search Error:", error);
+      });
+  }
+
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          value={searchdata}
+          placeholder="search here..."
+          onChange={searchOnApi}
+        />
+      </div>
       <h2>Product List</h2>
       <ul>
-        {productsData.map((data) => (
-          <li key={data.id}>
-            <strong>
-              {data.id} {data.title}
-            </strong>
-            : {data.description}
-          </li>
-        ))}
+        {(searchdata.trim() !== "" ? searchResults : productsData).map(
+          (data) => (
+            <li key={data.id}>
+              <strong>
+                {data.id} {data.title}
+              </strong>
+              : {data.description}
+            </li>
+          )
+        )}
       </ul>
     </div>
   );
